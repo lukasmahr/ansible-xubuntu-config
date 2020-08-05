@@ -8,6 +8,7 @@
 
   tasks:
     - import_tasks: tasks/vscode.yml
+    - import_tasks: tasks/chromium.yml
     - import_tasks: tasks/zsh.yml
     - import_tasks: tasks/hstr.yml
     - import_tasks: tasks/jetbrains-toolbox.yml

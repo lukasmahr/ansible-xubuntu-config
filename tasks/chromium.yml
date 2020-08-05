@@ -1,0 +1,4 @@
+---
+- name: install chromium
+  apt:
+    name: chromium-browser
