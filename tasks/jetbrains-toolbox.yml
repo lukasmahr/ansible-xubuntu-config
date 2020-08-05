@@ -1,0 +1,35 @@
+---
+- name: Download and install jetbrains toolbox
+  unarchive:
+    src: https://download.jetbrains.com/toolbox/jetbrains-toolbox-{{ jetbrains_toolbox_version }}.tar.gz
+    dest: /opt
+    remote_src: yes
+    creates: /opt/jetbrains-toolbox/jetbrains-toolbox
+- name: stat jetbrains-toolbox download
+  stat: path=/opt/jetbrains-toolbox-{{ jetbrains_toolbox_version }}
+  register: stat_toolbox
+- name: Rename Jetbrains Toolbox folder
+  command: mv /opt/jetbrains-toolbox-{{ jetbrains_toolbox_version }} /opt/jetbrains-toolbox
+  when: stat_toolbox.stat.exists
+- name: Create dir for jetbrains-toolbox desktop entry
+  file:
+    path: /home/{{ user }}/.local/share/applications/
+    state: directory
+    owner: "{{ user }}"
+    group: "{{ user }}"
+- name: Copy desktop entry for jetbrains-toolbox
+  blockinfile:
+    path: /home/{{ user }}/.local/share/applications/jetbrains-toolbox.desktop
+    create: yes
+    block: |
+      [Desktop Entry]
+      Version=1.0
+      Type=Application
+      Name=Jetbrains Toolbox
+      #Icon=/opt/jetbrains-toolbox/bin/toolbox.svg
+      Exec='/opt/jetbrains-toolbox/jetbrains-toolbox' %f
+      Comment=Jetbrains Toolbox
+      Categories=Development;IDE;
+      Terminal=false
+      StartupWMClass=jetbrains-toolbox
+

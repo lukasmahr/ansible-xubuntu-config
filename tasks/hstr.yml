@@ -1,0 +1,24 @@
+---
+- name: Add apt repo for hstr
+  apt_repository:
+    repo: ppa:ultradvorka/ppa
+- name: install hstr
+  apt:
+    name: hstr
+    update_cache: yes
+- name: stat zshrc file
+  stat: path=/home/{{ user }}/.zshrc
+  register: stat_zshrc
+- name: add hstr to zshrc
+  when: stat_zshrc.stat.exists
+  blockinfile:
+    path: /home/{{ user }}/.zshrc
+    block: |
+      # HSTR config (only if installed, otherwise CTRL+R is broken...)
+      if type hstr > /dev/null; then
+        alias hh=hstr                     # hh to be alias for hstr
+        export HISTFILE=~/.zsh_history    # ensure history file visibility
+        export HSTR_CONFIG=hicolor        # get more colors
+        bindkey -s "\C-r" "\eqhstr\n"     # bind hstr to Ctrl-r (for Vi mode check doc)
+      fi
+
