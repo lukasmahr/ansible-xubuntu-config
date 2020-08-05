@@ -1,0 +1,30 @@
+---
+- name: install docker dependencies
+  apt:
+    name: 
+      - apt-transport-https 
+      - ca-certificates 
+      - curl 
+      - gnupg-agent 
+      - software-properties-common
+- name: Add an apt key for docker repo
+  apt_key:
+    url: https://download.docker.com/linux/ubuntu/gpg
+    state: present
+- name: Add apt repo for docker
+  apt_repository:
+    repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu focal stable
+    state: present
+    filename: vscode
+    update_cache: true
+- name: install docker
+  apt:
+    name: 
+      - docker-ce 
+      - docker-ce-cli 
+      - containerd.io
+- name: Add user user to docker group.
+  user:
+    name: "{{ user }}"
+    groups: docker
+    append: true
